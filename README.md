@@ -180,12 +180,3 @@ Email: fernando.lepezruiz@gmail.com
 Otros Proyectos: Tesis - Replicación Proxmox en Hospital
 
 ⭐ ¡Si este proyecto te resulta útil, no olvides dejar una estrella! ⭐
-
-
-
-    subgraph "Failover Automático"
-        H[Health Check] -->|Si RPi no responde| I[Trigger Terraform]
-        I --> J[Activar VM en OCI]
-        J --> K[Redirigir Tráfico/Notificar]
-    end
-
