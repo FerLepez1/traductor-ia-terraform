@@ -105,7 +105,7 @@ flowchart TD
 ---
 
 ## 🗂️ Estructura del Repositorio
-
+```
 traductor-ia-terraform/
 ├── terraform/
 │ ├── main.tf
@@ -120,7 +120,7 @@ traductor-ia-terraform/
 ├── .gitignore
 ├── LICENSE
 └── README.md
-            
+```            
 ---
 
 ## 🚀 Cómo Reproducirlo
