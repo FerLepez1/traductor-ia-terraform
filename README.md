@@ -83,7 +83,8 @@ flowchart TD
         H[Health Check] -->|Si RPi no responde| I[Trigger Terraform]
         I --> J[Activar VM en OCI]
         J --> K[Redirigir Tráfico/Notificar]
-    end```
+    end
+```
 
 
 🧰 Tecnologías Utilizadas
