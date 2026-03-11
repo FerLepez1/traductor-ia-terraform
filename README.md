@@ -154,8 +154,8 @@ terraform apply -auto-approve
 ssh tu-usuario@IP-de-tu-raspberry
 docker --version
 pactl info
-
 ```
+
 
 📚 Lecciones Aprendidas
 
