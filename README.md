@@ -17,9 +17,19 @@
 *   **Latencia de Estado del Arte:** Preparado para desplegar modelos S2ST modernos (como Voxtral) que ofrecen **<200ms de latencia** con preservación de la voz del hablante, un hito para la conversación natural.
 *   **Independencia de Plataforma:** Sistema de audio virtual (basado en PipeWire) que permite la inyección de audio traducido en **cualquier aplicación de videollamada** (Zoom, Teams, Meet), funcionando tanto como anfitrión o invitado.
 
+## 📊 Logros con Métricas (Impacto Cuantificable)
+
+| Área de Mejora | Situación Inicial / Alternativas Comerciales | Logro Alcanzado / Objetivo del Proyecto |
+| :--- | :--- | :--- |
+| **Tiempo de Aprovisionamiento** | Configuración manual de un servidor: **horas o días**. | Reducción a **<5 segundos** con `terraform apply`. |
+| **Costo Operativo Anual** | Suscripción a Zoom AI Companion u otro servicio similar: **> $240 USD/año**. | **$0 USD/año** (usando hardware propio y capa gratuita de OCI). |
+| **Tiempo de Recuperación (RTO)** | Dependencia de un solo dispositivo; fallo = servicio caído hasta reparación manual. | Objetivo: **Failover automático en <1 minuto** a la nube. |
+| **Privacidad de Datos** | El audio se procesa en servidores de terceros (Zoom, Google, etc.). | **Control total de datos**: procesamiento local en hardware propio. |
+
 ## 💡 El Problema que Resolvemos
 
 Las herramientas comerciales de traducción simultánea (Zoom AI Companion, etc.) presentan limitaciones críticas para un caso de uso profesional y exigente:
+
 *   **Alta Dependencia:** Solo funcionan si eres el anfitrión y pagas una suscripción.
 *   **Falta de Privacidad:** El audio se procesa en servidores de terceros sin control sobre los datos.
 *   **Caja Negra:** Imposibilidad de personalizar el modelo con vocabulario técnico específico.
@@ -38,6 +48,7 @@ El sistema sigue un flujo de trabajo declarativo y automatizado, similar a GitOp
 5.  **Traducción Invisible:** Un modelo de IA (Voxtral/Latent Linguist) corre en el nodo activo. El audio de la llamada se captura y se inyecta de vuelta mediante dispositivos de **audio virtual (PipeWire)** , haciendo el proceso transparente para los participantes.
 
 ### Diagrama de Flujo (Mermaid)
+
 ```mermaid
 flowchart TD
     subgraph "Capa de Control (IaC)"
@@ -58,56 +69,107 @@ flowchart TD
         J --> K[Redirigir Tráfico/Notificar]
     end
 
-## 🏗️ Proposed Solution: Un Enfoque NetDevOps
-
+🏗️ Proposed Solution: Un Enfoque NetDevOps
 El sistema sigue un pipeline completamente automatizado que gestiona todo el ciclo de vida del servidor de traducción:
 
-1.  **Declarative Definition:** La configuración del servidor (IP, paquetes, servicios) se define como código en **Terraform** y se almacena en GitHub.
-2.  **Automated Provisioning:** Al ejecutar `terraform apply`, Terraform se conecta por SSH a la Raspberry Pi y ejecuta los scripts de aprovisionamiento.
-3.  **Initial Configuration:** **Cloud-init** (usado en la instalación inicial) y los scripts de Terraform automatizan la configuración de hostname, usuarios, claves SSH y red.
-4.  **Configuration Management:** **Scripts Bash y Python** (invocados por Terraform) instalan y configuran Docker, PipeWire y todas las dependencias necesarias.
-5.  **Real-Time Resilience:** El sistema está diseñado para incluir **health checks** y un **failover automático** a Oracle Cloud, orquestado por el mismo Terraform, garantizando alta disponibilidad para el servicio de traducción.
+Declarative Definition: La configuración del servidor (IP, paquetes, servicios) se define como código en Terraform y se almacena en GitHub.
 
-## 🧰 Technology Stack
+Automated Provisioning: Al ejecutar terraform apply, Terraform se conecta por SSH a la Raspberry Pi y ejecuta los scripts de aprovisionamiento.
 
-| Categoría | Tecnologías |
-|:---|:---|
-| **Infrastructure as Code (IaC)** | **Terraform**, Cloud-init |
-| **Hardware & OS** | Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64) |
-| **Cloud Provider** | Oracle Cloud Infrastructure (OCI) - **Always Free** (VM.Standard.A1.Flex, 4 OCPU ARM, 24GB RAM) |
-| **Containerization** | Docker, Docker Compose |
-| **Audio & Streaming** | PipeWire, WirePlumber, PulseAudio (pactl) |
-| **CI/CD & Version Control** | Git, GitHub |
-| **Programming & Scripting** | Bash, Python 3, HCL (Terraform) |
-| **AI Models (Planned)** | Mistral Voxtral (Realtime), Latent Linguist (Offline) |
-| **Monitoring (Planned)** | Prometheus, Grafana |
-| **Security** | SSH (key-based), IP fija, segmentación de red |
+Initial Configuration: Cloud-init (usado en la instalación inicial) y los scripts de Terraform automatizan la configuración de hostname, usuarios, claves SSH y red.
 
-## 🗂️ Repository Structure
+Configuration Management: Scripts Bash y Python (invocados por Terraform) instalan y configuran Docker, PipeWire y todas las dependencias necesarias.
 
+Real-Time Resilience: El sistema está diseñado para incluir health checks y un failover automático a Oracle Cloud, orquestado por el mismo Terraform, garantizando alta disponibilidad para el servicio de traducción.
+
+🧰 Technology Stack
+Categoría	Tecnologías
+Infrastructure as Code (IaC)	Terraform, Cloud-init
+Hardware & OS	Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64)
+Cloud Provider	Oracle Cloud Infrastructure (OCI) - Always Free (VM.Standard.A1.Flex, 4 OCPU ARM, 24GB RAM)
+Containerization	Docker, Docker Compose
+Audio & Streaming	PipeWire, WirePlumber, PulseAudio (pactl)
+CI/CD & Version Control	Git, GitHub
+Programming & Scripting	Bash, Python 3, HCL (Terraform)
+AI Models (Planned)	Mistral Voxtral (Realtime), Latent Linguist (Offline)
+Monitoring (Planned)	Prometheus, Grafana
+Security	SSH (key-based), IP fija, segmentación de red
+
+🗂️ Repository Structure
 traductor-ia-terraform/
 ├── terraform/
-│ ├── main.tf # Recurso null_resource y provisioners
-│ ├── variables.tf # Definición de variables (IP, usuario, key)
-│ ├── outputs.tf # Outputs de la ejecución
-│ └── terraform.tfvars.example # Plantilla para variables sensibles
+│   ├── main.tf                 # Recurso null_resource y provisioners
+│   ├── variables.tf             # Definición de variables (IP, usuario, key)
+│   ├── outputs.tf               # Outputs de la ejecución
+│   └── terraform.tfvars.example # Plantilla para variables sensibles
 ├── scripts/
-│ ├── setup-audio.sh # Configuración de PipeWire y dispositivos virtuales
-│ └── deploy-model.sh # Script para desplegar el contenedor del modelo (WIP)
+│   ├── setup-audio.sh           # Configuración de PipeWire y dispositivos virtuales
+│   └── deploy-model.sh          # Script para desplegar el contenedor del modelo (WIP)
 ├── docs/
-│ ├── diagrama-architectura.png (opcional)
-│ └── troubleshooting.md # Problemas comunes y soluciones
-├── .gitignore # Ignorar terraform.tfvars, .terraform, etc.
-├── LICENSE # MIT License
-└── README.md # Este archivo
+│   ├── diagrama-architectura.png (opcional)
+│   └── troubleshooting.md       # Problemas comunes y soluciones
+├── .gitignore                   # Ignorar terraform.tfvars, .terraform, etc.
+├── LICENSE                      # MIT License
+└── README.md                    # Este archivo
 
+🚀 Cómo Reproducirlo (Hasta la Fase de IaC)
+Prerrequisitos
+Raspberry Pi 5 con Ubuntu Server 24.04 instalado y conectada a la red.
 
-### **Sección 4: 🚀 Key Takeaways & Skills Demonstrated** 
-```markdown
-## 🚀 Key Takeaways & Skills Demonstrated
+PC con Windows/Linux/macOS y Terraform instalado.
 
-*   **Arquitectura e Implementación de Soluciones Complejas:** Diseño de un sistema híbrido (Edge + Cloud) con automatización completa y plan de recuperación ante desastres (failover).
-*   **Integración de Stack Tecnológico Diverso:** Combinación exitosa de Terraform, Linux embebido (RPi), audio de baja latencia (PipeWire) y servicios cloud (OCI) en un sistema coherente.
-*   **Aplicación de Prácticas DevOps (GitOps):** Uso de GitHub como fuente de verdad, commits atómicos y pipelines de IaC para garantizar reproducibilidad y control de versiones de la infraestructura.
-*   **Resolución de Problemas del Mundo Real:** Diagnóstico y solución de desafíos concretos como IPs dinámicas (DHCP), resolución de nombres (mDNS) y estabilidad de drivers WiFi en hardware embebido.
-*   **Visión de Futuro:** Preparación de la infraestructura para incorporar modelos de IA de última generación (Voxtral, <200ms de latencia) con preservación de voz, demostrando capacidad para adoptar tecnologías emergentes.
+Clave SSH configurada para acceso sin contraseña a la Raspberry.
+
+Pasos Rápidos
+Clona el repositorio:
+
+bash
+git clone https://github.com/FerLepez1/traductor-ia-terraform.git
+cd traductor-ia-terraform/terraform
+Configura tus variables:
+
+bash
+cp terraform.tfvars.example terraform.tfvars
+# Edita terraform.tfvars con la IP de tu Raspberry y la ruta a tu clave SSH privada
+Inicia y Aplica:
+
+bash
+terraform init
+terraform plan
+terraform apply -auto-approve
+Verifica la conexión:
+
+bash
+ssh tu-usuario@IP-de-tu-raspberry
+docker --version
+pactl info
+📊 Lecciones Aprendidas y Desafíos Técnicos (Key Takeaways)
+Infraestructura Híbrida Real: Implementar un sistema que combina un dispositivo Edge con un failover en la nube usando una sola herramienta (Terraform) es no solo posible, sino eficiente y mantenible.
+
+Gestión de Estado y Conectividad: El principal desafío no fue Terraform en sí, sino la orquestación de redes: IPs dinámicas, resolución de nombres (mDNS en Windows vs. Linux) y diagnósticos de conectividad. Este proyecto demuestra una capacidad sólida para resolver problemas de red del mundo real.
+
+Hardware Real, Problemas Reales: La experiencia con el driver WiFi de la Raspberry Pi 5 (error -52) subraya la importancia de la estabilidad del medio físico. La solución (migrar a Ethernet) es una decisión de arquitectura madura.
+
+El Audio es Complejo pero Gobernable: Configurar un stack de audio moderno (PipeWire) de forma headless y automatizada fue un desafío, pero resultó en un sistema de inyección de audio extremadamente flexible y desacoplado de las aplicaciones.
+
+🚀 Key Takeaways & Skills Demonstrated
+Arquitectura de Sistemas Híbridos (Edge/Cloud): Capacidad para diseñar e implementar soluciones que integran hardware de punta (Raspberry Pi) con infraestructura en la nube (Oracle Cloud) para crear sistemas resilientes y distribuidos, aplicando patrones de alta disponibilidad como el failover automático.
+
+Infraestructura como Código (IaC) Profesional: Dominio de Terraform no solo para aprovisionar, sino para orquestar configuraciones complejas en entornos híbridos, incluyendo la gestión de scripts de post-aprovisionamiento (Bash) y la resolución de problemas de conectividad y estado en sistemas reales.
+
+Integración de Tecnologías de Bajo Nivel con IA: Experiencia práctica en la configuración de stacks de audio de baja latencia (PipeWire) en Linux embebido, preparando el terreno para la integración de modelos de IA de última generación (como Voxtral), demostrando una visión integral desde el hardware hasta la aplicación.
+
+Metodología de Trabajo y Resolución de Problemas: Aplicación de un enfoque estructurado (GitOps, documentación por fases) para abordar desafíos técnicos concretos (problemas de drivers WiFi, DHCP, resolución de nombres), documentando el proceso y las soluciones, una habilidad crucial para entornos SRE/Platform Engineering.
+
+🔗 Conecta Conmigo
+Estoy activamente buscando oportunidades como Ingeniero de Plataforma (Platform Engineer), DevOps Senior o Líder de Infraestructura Linux en equipos remotos internacionales.
+
+LinkedIn: linkedin.com/in/fernandolepezruiz
+
+Email: fernando.lepezruiz@gmail.com
+
+GitHub: github.com/FerLepez1
+
+Otros Proyectos: Tesis - Replicación Proxmox en Hospital
+
+⭐ Si este proyecto te resulta útil o interesante, ¡no olvides dejar una estrella! ⭐
