@@ -167,6 +167,7 @@ Hardware Real: La experiencia con el driver WiFi de la Raspberry Pi 5 (error -52
 Audio en Linux: Configurar un stack de audio moderno (PipeWire) de forma headless y automatizada fue un desafío superado con éxito.
 
 🔗 Conecta Conmigo
+
 Fernando Lépez Ruiz
 Ingeniero en Telecomunicaciones | DevOps | IaC
 
