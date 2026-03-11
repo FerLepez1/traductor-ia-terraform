@@ -87,49 +87,53 @@ flowchart TD
 ```
 
 
-🧰 Tecnologías Utilizadas
+## 🧰 Tecnologías Utilizadas
 
-Categoría	Tecnologías
-Infrastructure as Code (IaC)	Terraform, Cloud-init
-Hardware & OS	Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64)
-Cloud Provider	Oracle Cloud Infrastructure (OCI) - Always Free
-Containerization	Docker, Docker Compose
-Audio & Streaming	PipeWire, WirePlumber, PulseAudio (pactl)
-CI/CD & Version Control	Git, GitHub
-Programming & Scripting	Bash, Python 3, HCL
-AI Models (Planned)	Mistral Voxtral, Latent Linguist
-Monitoring (Planned)	Prometheus, Grafana
-Security	SSH key-based, IP fija
+| Categoría | Tecnologías |
+|:---|:---|
+| **Infrastructure as Code (IaC)** | Terraform, Cloud-init |
+| **Hardware & OS** | Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64) |
+| **Cloud Provider** | Oracle Cloud Infrastructure (OCI) - Always Free |
+| **Containerization** | Docker, Docker Compose |
+| **Audio & Streaming** | PipeWire, WirePlumber, PulseAudio (pactl) |
+| **CI/CD & Version Control** | Git, GitHub |
+| **Programming & Scripting** | Bash, Python 3, HCL |
+| **AI Models (Planned)** | Mistral Voxtral, Latent Linguist |
+| **Monitoring (Planned)** | Prometheus, Grafana |
+| **Security** | SSH key-based, IP fija |
 
-🗂️ Estructura del Repositorio
+---
 
-text
+## 🗂️ Estructura del Repositorio
+
+
 traductor-ia-terraform/
 ├── terraform/
-│   ├── main.tf                 # Recurso null_resource y provisioners
-│   ├── variables.tf             # Definición de variables (IP, usuario, key)
-│   ├── outputs.tf               # Outputs de la ejecución
-│   └── terraform.tfvars.example # Plantilla para variables sensibles
+│ ├── main.tf # Recurso null_resource y provisioners
+│ ├── variables.tf # Definición de variables (IP, usuario, key)
+│ ├── outputs.tf # Outputs de la ejecución
+│ └── terraform.tfvars.example # Plantilla para variables sensibles
 ├── scripts/
-│   ├── setup-audio.sh           # Configuración de PipeWire
-│   └── deploy-model.sh          # Script para desplegar el modelo (WIP)
+│ ├── setup-audio.sh # Configuración de PipeWire
+│ └── deploy-model.sh # Script para desplegar el modelo (WIP)
 ├── docs/
-│   └── troubleshooting.md       # Problemas comunes y soluciones
-├── .gitignore                   
-├── LICENSE                      
+│ └── troubleshooting.md # Problemas comunes y soluciones
+├── .gitignore
+├── LICENSE
 └── README.md
             
-🚀 Cómo Reproducirlo
+---
 
-Prerrequisitos
-Raspberry Pi 5 con Ubuntu Server 24.04 instalado y conectada a la red.
+## 🚀 Cómo Reproducirlo
 
-PC con Windows/Linux/macOS y Terraform instalado.
+### Prerrequisitos
+*   Raspberry Pi 5 con Ubuntu Server 24.04 instalado y conectada a la red.
+*   PC con Windows/Linux/macOS y Terraform instalado.
+*   Clave SSH configurada para acceso sin contraseña a la Raspberry.
 
-Clave SSH configurada para acceso sin contraseña a la Raspberry.
+### Pasos
 
-Pasos
-bash
+```bash
 # 1. Clona el repositorio
 git clone https://github.com/FerLepez1/traductor-ia-terraform.git
 cd traductor-ia-terraform/terraform
@@ -151,6 +155,7 @@ terraform apply -auto-approve
 ssh tu-usuario@IP-de-tu-raspberry
 docker --version
 pactl info
+```
 
 📚 Lecciones Aprendidas
 
@@ -163,14 +168,14 @@ Hardware Real: La experiencia con el driver WiFi de la Raspberry Pi 5 (error -52
 Audio en Linux: Configurar un stack de audio moderno (PipeWire) de forma headless y automatizada fue un desafío superado con éxito.
 
 🔗 Conecta Conmigo
-Fernando López Ruiz
+Fernando Lépez Ruiz
 Ingeniero en Telecomunicaciones | DevOps | IaC
 
 LinkedIn: linkedin.com/in/fernandolepezruiz
 
-Email: fernando.lepezruiz@gmail.com
-
 GitHub: github.com/FerLepez1
+
+Email: fernando.lepezruiz@gmail.com
 
 Otros Proyectos: Tesis - Replicación Proxmox en Hospital
 
