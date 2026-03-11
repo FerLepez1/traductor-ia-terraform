@@ -65,7 +65,6 @@ El sistema sigue un flujo de trabajo declarativo y automatizado, similar a GitOp
 
  ### Diagrama de Flujo (Mermaid)
  
-```mermaid
 flowchart TD
     subgraph "Capa de Control (IaC)"
         A[Repositorio Git<br>Configuración Terraform] --> B[Terraform Apply]
