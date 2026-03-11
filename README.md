@@ -106,18 +106,17 @@ flowchart TD
 
 ## 🗂️ Estructura del Repositorio
 
-
 traductor-ia-terraform/
 ├── terraform/
-│ ├── main.tf # Recurso null_resource y provisioners
-│ ├── variables.tf # Definición de variables (IP, usuario, key)
-│ ├── outputs.tf # Outputs de la ejecución
-│ └── terraform.tfvars.example # Plantilla para variables sensibles
+│ ├── main.tf
+│ ├── variables.tf
+│ ├── outputs.tf
+│ └── terraform.tfvars.example
 ├── scripts/
-│ ├── setup-audio.sh # Configuración de PipeWire
-│ └── deploy-model.sh # Script para desplegar el modelo (WIP)
+│ ├── setup-audio.sh
+│ └── deploy-model.sh
 ├── docs/
-│ └── troubleshooting.md # Problemas comunes y soluciones
+│ └── troubleshooting.md
 ├── .gitignore
 ├── LICENSE
 └── README.md
