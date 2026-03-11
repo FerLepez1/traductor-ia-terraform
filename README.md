@@ -114,8 +114,8 @@ traductor-ia-terraform/
 │ └── terraform.tfvars.example
 ├── scripts/
 │ ├── setup-audio.sh
-│ └── deploy-model.sh
-├── docs/
+│ ├── deploy-model.sh
+│ └── docs/
 │ └── troubleshooting.md
 ├── .gitignore
 ├── LICENSE
