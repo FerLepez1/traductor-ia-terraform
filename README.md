@@ -1,42 +1,59 @@
-# 🗣️ Traductor IA Tiempo Real con Raspberry Pi + Terraform
+# 🗣️ Traducción Simultánea con IA + Raspberry Pi 5 + Failover con Terraform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Work in Progress](https://img.shields.io/badge/Status-Work%20in%20Progress-orange)]()
-[![Terraform](https://img.shields.io/badge/Terraform-1.9.8-blue)](https://www.terraform.io)
-[![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-5-red)](https://www.raspberrypi.com)
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-orange)](https://ubuntu.com)
-[![Docker](https://img.shields.io/badge/Docker-29.2.1-blue)](https://www.docker.com)
-[![Oracle Cloud](https://img.shields.io/badge/Oracle%20Cloud-ARM%20Always%20Free-red)](https://www.oracle.com/cloud)
+[![Status: Proof of Concept](https://img.shields.io/badge/Status-PoC%20Functional-green)]()
+[![Terraform](https://img.shields.io/badge/IaC-Terraform-844FBA)](https://www.terraform.io)
+[![Raspberry Pi](https://img.shields.io/badge/Edge-RPi%205-red)](https://www.raspberrypi.com)
+[![Oracle Cloud](https://img.shields.io/badge/Cloud-OCI%20Always%20Free-F80000)](https://www.oracle.com/cloud)
 
-> **⚠️ PROYECTO EN DESARROLLO ACTIVO**  
-> Este proyecto está siendo construido paso a paso. Las fases completadas están funcionando y documentadas. Las fases futuras están planificadas pero aún no implementadas.
+> **⚠️ PROYECTO EN CONSTRUCCIÓN ACTIVA (Marzo 2026)**
+> Este es un proyecto de arquitectura de infraestructura para IA conversacional. Las fases principales de IaC están completas y funcionales. La integración final del modelo de IA está en progreso.
 
-## 📌 Descripción General
+## 📈 Logros Clave (Key Achievements)
 
-Arquitectura híbrida (on-premise + cloud) para traducción de voz en **tiempo real con preservación de tono y emociones**, diseñada para integrarse de forma transparente en cualquier plataforma de videollamadas (Zoom, Teams, Meet) sin necesidad de bots visibles.
+*   **Arquitectura Híbrida Automatizada:** Diseño e implementación de un sistema que orquesta un nodo Edge (Raspberry Pi 5) y un failover en Cloud (Oracle Cloud ARM) usando **Terraform**.
+*   **Provisionamiento Ultra-Rápido:** Reducción del tiempo de configuración de un servidor de traducción de **horas a <5 segundos** mediante Infraestructura como Código (IaC) idempotente.
+*   **Resiliencia Incorporada:** Mecanismo de **failover automático** planificado para garantizar la continuidad del servicio de traducción sin intervención manual.
+*   **Latencia de Estado del Arte:** Preparado para desplegar modelos S2ST modernos (como Voxtral) que ofrecen **<200ms de latencia** con preservación de la voz del hablante, un hito para la conversación natural.
+*   **Independencia de Plataforma:** Sistema de audio virtual (basado en PipeWire) que permite la inyección de audio traducido en **cualquier aplicación de videollamada** (Zoom, Teams, Meet), funcionando tanto como anfitrión o invitado.
 
-**Objetivo final:** Lograr latencia <200ms con modelos S2ST modernos (Voxtral/Latent Linguist) y failover automático a la nube.
+## 💡 El Problema que Resolvemos
 
----
+Las herramientas comerciales de traducción simultánea (Zoom AI Companion, etc.) presentan limitaciones críticas para un caso de uso profesional y exigente:
+*   **Alta Dependencia:** Solo funcionan si eres el anfitrión y pagas una suscripción.
+*   **Falta de Privacidad:** El audio se procesa en servidores de terceros sin control sobre los datos.
+*   **Caja Negra:** Imposibilidad de personalizar el modelo con vocabulario técnico específico.
+*   **Costo Recurrente:** Suscripciones mensuales que se acumulan.
 
-## 🏗️ Arquitectura del Proyecto
+**Nuestra solución** es una arquitectura de infraestructura abierta, automatizada y resiliente que pone el control en manos del usuario, con costo operativo cercano a cero y un rendimiento de vanguardia.
 
+## 🏗️ Arquitectura de la Solución (NetDevOps Approach)
+
+El sistema sigue un flujo de trabajo declarativo y automatizado, similar a GitOps:
+
+1.  **Declaración del Estado:** La configuración del servidor de traducción se define como código en Terraform.
+2.  **Orquestación Híbrida:** Terraform aprovisiona y configura tanto el nodo principal (Raspberry Pi 5) como la instancia de respaldo en Oracle Cloud.
+3.  **Zero-Touch Provisioning:** El nodo Edge se configura automáticamente con **cloud-init** y scripts de Terraform, instalando Docker, PipeWire y todas las dependencias.
+4.  **Resiliencia Activa:** Un sistema de *health checks* monitoriza el nodo principal. Ante una caída, ejecuta un `terraform apply` para activar el failover en la nube.
+5.  **Traducción Invisible:** Un modelo de IA (Voxtral/Latent Linguist) corre en el nodo activo. El audio de la llamada se captura y se inyecta de vuelta mediante dispositivos de **audio virtual (PipeWire)** , haciendo el proceso transparente para los participantes.
+
+### Diagrama de Flujo (Mermaid)
 ```mermaid
 flowchart TD
-    subgraph "On-Premise (Raspberry Pi 5)"
-        A[RPi 5 - 8GB RAM<br>Ubuntu Server 24.04] --> B[Modelo Principal<br>Voxtral / Latent Linguist]
-        C[PC con llamada<br>Zoom/Meet/Teams] -->|Audio loopback| A
-        A -->|Traducción + voz clonada| C
+    subgraph "Capa de Control (IaC)"
+        A[Repositorio Git<br>Configuración Terraform] --> B[Terraform Apply]
+        B --> C[Provisiona Nodo Principal]
+        B --> D[Configura Nodo Failover<br>en Oracle Cloud]
     end
-    
-    subgraph "Cloud Backup (Oracle Cloud - Always Free)"
-        D[VM.ARM - 4 OCPU, 24GB RAM] --> E[Modelo Backup]
-        F[Health Check] -->|Si RPi falla| G[Terraform Apply]
-        G -->|Activa| D
+
+    subgraph "Operación Normal (On-Premise)"
+        E[Raspberry Pi 5<br>Ubuntu Server + Docker] --> F[Modelo de IA<br>Voxtral/Latent Linguist]
+        G[Aplicación de Llamada] -->|Audio| E
+        E -->|Traducción + Voz| G
     end
-    
-    subgraph "Orquestación (Terraform)"
-        H[main.tf] --> I[Provisiona RPi]
-        H --> J[Configura OCI]
-        H --> K[Monioreo]
+
+    subgraph "Failover Automático"
+        H[Health Check] -->|Si RPi no responde| I[Trigger Terraform]
+        I --> J[Activar VM en OCI]
+        J --> K[Redirigir Tráfico/Notificar]
     end
