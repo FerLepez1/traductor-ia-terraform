@@ -87,6 +87,7 @@ flowchart TD
 
 
 🧰 Tecnologías Utilizadas
+
 Categoría	Tecnologías
 Infrastructure as Code (IaC)	Terraform, Cloud-init
 Hardware & OS	Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64)
@@ -98,7 +99,9 @@ Programming & Scripting	Bash, Python 3, HCL
 AI Models (Planned)	Mistral Voxtral, Latent Linguist
 Monitoring (Planned)	Prometheus, Grafana
 Security	SSH key-based, IP fija
+
 🗂️ Estructura del Repositorio
+
 text
 traductor-ia-terraform/
 ├── terraform/
@@ -113,8 +116,10 @@ traductor-ia-terraform/
 │   └── troubleshooting.md       # Problemas comunes y soluciones
 ├── .gitignore                   
 ├── LICENSE                      
-└── README.md                    
+└── README.md
+            
 🚀 Cómo Reproducirlo
+
 Prerrequisitos
 Raspberry Pi 5 con Ubuntu Server 24.04 instalado y conectada a la red.
 
@@ -145,7 +150,9 @@ terraform apply -auto-approve
 ssh tu-usuario@IP-de-tu-raspberry
 docker --version
 pactl info
+
 📚 Lecciones Aprendidas
+
 Infraestructura Híbrida Real: Implementar un sistema que combina un dispositivo Edge con un failover en la nube usando una sola herramienta (Terraform) es no solo posible, sino eficiente y mantenible.
 
 Gestión de Redes: El principal desafío fue la orquestación de redes: IPs dinámicas, resolución de nombres (mDNS) y diagnósticos de conectividad.
