@@ -57,3 +57,57 @@ flowchart TD
         I --> J[Activar VM en OCI]
         J --> K[Redirigir Tráfico/Notificar]
     end
+
+## 🏗️ Proposed Solution: Un Enfoque NetDevOps
+
+El sistema sigue un pipeline completamente automatizado que gestiona todo el ciclo de vida del servidor de traducción:
+
+1.  **Declarative Definition:** La configuración del servidor (IP, paquetes, servicios) se define como código en **Terraform** y se almacena en GitHub.
+2.  **Automated Provisioning:** Al ejecutar `terraform apply`, Terraform se conecta por SSH a la Raspberry Pi y ejecuta los scripts de aprovisionamiento.
+3.  **Initial Configuration:** **Cloud-init** (usado en la instalación inicial) y los scripts de Terraform automatizan la configuración de hostname, usuarios, claves SSH y red.
+4.  **Configuration Management:** **Scripts Bash y Python** (invocados por Terraform) instalan y configuran Docker, PipeWire y todas las dependencias necesarias.
+5.  **Real-Time Resilience:** El sistema está diseñado para incluir **health checks** y un **failover automático** a Oracle Cloud, orquestado por el mismo Terraform, garantizando alta disponibilidad para el servicio de traducción.
+
+## 🧰 Technology Stack
+
+| Categoría | Tecnologías |
+|:---|:---|
+| **Infrastructure as Code (IaC)** | **Terraform**, Cloud-init |
+| **Hardware & OS** | Raspberry Pi 5 (8GB), Ubuntu Server 24.04 (ARM64) |
+| **Cloud Provider** | Oracle Cloud Infrastructure (OCI) - **Always Free** (VM.Standard.A1.Flex, 4 OCPU ARM, 24GB RAM) |
+| **Containerization** | Docker, Docker Compose |
+| **Audio & Streaming** | PipeWire, WirePlumber, PulseAudio (pactl) |
+| **CI/CD & Version Control** | Git, GitHub |
+| **Programming & Scripting** | Bash, Python 3, HCL (Terraform) |
+| **AI Models (Planned)** | Mistral Voxtral (Realtime), Latent Linguist (Offline) |
+| **Monitoring (Planned)** | Prometheus, Grafana |
+| **Security** | SSH (key-based), IP fija, segmentación de red |
+
+## 🗂️ Repository Structure
+
+traductor-ia-terraform/
+├── terraform/
+│ ├── main.tf # Recurso null_resource y provisioners
+│ ├── variables.tf # Definición de variables (IP, usuario, key)
+│ ├── outputs.tf # Outputs de la ejecución
+│ └── terraform.tfvars.example # Plantilla para variables sensibles
+├── scripts/
+│ ├── setup-audio.sh # Configuración de PipeWire y dispositivos virtuales
+│ └── deploy-model.sh # Script para desplegar el contenedor del modelo (WIP)
+├── docs/
+│ ├── diagrama-architectura.png (opcional)
+│ └── troubleshooting.md # Problemas comunes y soluciones
+├── .gitignore # Ignorar terraform.tfvars, .terraform, etc.
+├── LICENSE # MIT License
+└── README.md # Este archivo
+
+
+### **Sección 4: 🚀 Key Takeaways & Skills Demonstrated** 
+```markdown
+## 🚀 Key Takeaways & Skills Demonstrated
+
+*   **Arquitectura e Implementación de Soluciones Complejas:** Diseño de un sistema híbrido (Edge + Cloud) con automatización completa y plan de recuperación ante desastres (failover).
+*   **Integración de Stack Tecnológico Diverso:** Combinación exitosa de Terraform, Linux embebido (RPi), audio de baja latencia (PipeWire) y servicios cloud (OCI) en un sistema coherente.
+*   **Aplicación de Prácticas DevOps (GitOps):** Uso de GitHub como fuente de verdad, commits atómicos y pipelines de IaC para garantizar reproducibilidad y control de versiones de la infraestructura.
+*   **Resolución de Problemas del Mundo Real:** Diagnóstico y solución de desafíos concretos como IPs dinámicas (DHCP), resolución de nombres (mDNS) y estabilidad de drivers WiFi en hardware embebido.
+*   **Visión de Futuro:** Preparación de la infraestructura para incorporar modelos de IA de última generación (Voxtral, <200ms de latencia) con preservación de voz, demostrando capacidad para adoptar tecnologías emergentes.
