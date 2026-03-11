@@ -1,0 +1,4 @@
+# EJEMPLO - COPIA ESTE ARCHIVO COMO terraform.tfvars Y AJUSTA LOS VALORES
+raspberry_ip    = "192.168.1.100"  # Cambia por tu IP
+ssh_user        = "fernando"        # Tu usuario
+ssh_private_key = "~/.ssh/id_rsa"   # Ruta a tu clave
